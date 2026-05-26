@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BK HausConcept | Renovierung & Innenausbau in Mönchengladbach</title>
+<meta name="description" content="Renovierung, Trockenbau, Fliesenarbeiten, Innenausbau und Modernisierung in Mönchengladbach und NRW.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#d4af37;--bg:#0b0b0b}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Montserrat,sans-serif;background:var(--bg);color:#fff}
+header{position:fixed;top:0;width:100%;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);z-index:999}
+nav{max-width:1400px;margin:auto;padding:15px 25px;display:flex;justify-content:space-between;align-items:center}
+.logo{color:var(--gold);font-weight:700}
+.menu{display:flex;gap:20px;align-items:center}
+.menu a{color:white;text-decoration:none}
+.hero{height:100vh;background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2000&auto=format&fit=crop') center/cover;display:flex;justify-content:center;align-items:center;text-align:center;padding:20px}
+.hero h1{font-size:64px}
+.hero p{margin-top:15px;color:#ddd}
+.btn{display:inline-block;margin-top:25px;padding:15px 30px;border:1px solid var(--gold);color:var(--gold);text-decoration:none}
+section{padding:100px 8%}
+h2{color:var(--gold);font-size:44px;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.card,.project{background:#171717;padding:25px;border-radius:15px}
+.project{text-align:center;height:220px;display:flex;align-items:center;justify-content:center}
+.reveal{opacity:0;transform:translateY(50px) scale(.95);transition:.8s}
+.reveal.active{opacity:1;transform:translateY(0) scale(1)}
+form{display:grid;gap:15px}
+input,textarea{padding:15px;background:#111;border:1px solid #333;color:white}
+button{padding:15px;background:var(--gold);border:none;cursor:pointer}
+footer{padding:40px;text-align:center;color:#aaa;border-top:1px solid #222}
+@media(max-width:768px){.hero h1{font-size:38px}.menu a{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+<nav>
+<div class="logo">BK HausConcept</div>
+<div class="menu">
+<a href="#services">Leistungen</a>
+<a href="#projects">Projekte</a>
+<a href="#about">Über Uns</a>
+<a href="#contact">Kontakt</a>
+<span>🇩🇪 🇬🇧 🇷🇺 🇺🇦</span>
+</div>
+</nav>
+</header>
+
+<section class="hero">
+<div>
+<h1>Wir verwandeln Ihre Immobilie in ein Meisterwerk</h1>
+<p>Renovierung, Innenausbau und Modernisierung in Mönchengladbach & NRW</p>
+<a class="btn" href="#contact">Kostenlose Beratung</a>
+</div>
+</section>
+
+<section id="services" class="reveal">
+<h2>Leistungen</h2>
+<div class="grid">
+<div class="card">Renovierung</div>
+<div class="card">Kernsanierung</div>
+<div class="card">Trockenbau</div>
+<div class="card">Malerarbeiten</div>
+<div class="card">Fliesenarbeiten</div>
+<div class="card">Bodenverlegung</div>
+<div class="card">Badezimmer</div>
+<div class="card">Innenausbau</div>
+<div class="card">Erdarbeiten</div>
+</div>
+</section>
+
+<section id="projects" class="reveal">
+<h2>Projekte</h2>
+<p style="margin-bottom:20px;color:#aaa">Beispielbilder zur Darstellung unserer Leistungen. Eigene Projektfotos werden laufend ergänzt.</p>
+<div class="grid">
+<div class="project">Projekt 1</div>
+<div class="project">Projekt 2</div>
+<div class="project">Projekt 3</div>
+<div class="project">Projekt 4</div>
+</div>
+</section>
+
+<section id="about" class="reveal">
+<h2>Über Uns</h2>
+<p>BK HausConcept steht für Qualität, Zuverlässigkeit und präzise Ausführung.</p>
+<br>
+<ul>
+<li>✓ Zuverlässigkeit</li>
+<li>✓ Qualität</li>
+<li>✓ Saubere Ausführung</li>
+<li>✓ Termintreue</li>
+<li>✓ Transparente Kommunikation</li>
+</ul>
+</section>
+
+<section id="contact" class="reveal">
+<h2>Kontakt</h2>
+<form action="https://formspree.io/f/mpqnoqnp" method="POST">
+<input type="text" name="name" placeholder="Ihr Name" required>
+<input type="email" name="email" placeholder="E-Mail" required>
+<input type="tel" name="phone" placeholder="Telefon">
+<textarea name="message" placeholder="Beschreiben Sie Ihr Projekt" required></textarea>
+<input type="hidden" name="_gotcha">
+<button type="submit">Anfrage senden</button>
+</form>
+<br>
+<p>📧 bk.hausconcept@gmail.com</p>
+<p>📷 @bkhausconcept</p>
+<p>📍 Ferdinandstraße 31, 41061 Mönchengladbach</p>
+</section>
+
+<footer>
+Bohdan Koziar • BK HausConcept • Impressum • Datenschutz
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active')})
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+
+</body>
+</html>
