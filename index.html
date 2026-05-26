@@ -1,32 +1,135 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BK HausConcept</title>
-
+<meta name="description" content="BK HausConcept - Renovierung, Innenausbau, Trockenbau, Fliesenarbeiten und Modernisierung in Mönchengladbach und NRW.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-
-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:black;
-    color:gold;
-    font-family:Arial;
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Montserrat,sans-serif;background:#0b0b0b;color:#fff}
+header{position:fixed;top:0;width:100%;z-index:999;background:rgba(0,0,0,.88);backdrop-filter:blur(10px)}
+.nav{max-width:1400px;margin:auto;padding:18px 30px;display:flex;justify-content:space-between;align-items:center}
+.logo{color:#d4af37;font-weight:700;font-size:26px}
+.menu{display:flex;gap:24px;align-items:center}
+.menu a{color:white;text-decoration:none}
+.flags span{cursor:pointer;font-size:20px;margin-left:10px}
+.hero{height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=2000&auto=format&fit=crop') center/cover}
+.hero-content{max-width:900px;padding:20px}
+.hero img{max-width:320px;border-radius:12px;margin-bottom:25px}
+.hero h1{font-size:64px;margin-bottom:20px}
+.hero p{color:#ddd;font-size:20px}
+.btn{display:inline-block;margin-top:30px;padding:16px 36px;border:1px solid #d4af37;color:#d4af37;text-decoration:none}
+section{padding:110px 8%}
+.title{font-size:48px;color:#d4af37;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
+.card{background:#151515;padding:30px;border-radius:16px;border:1px solid #242424}
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.project{height:240px;background:#161616;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#d4af37}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.contact{background:#151515;padding:40px;border-radius:20px}
+footer{padding:40px;text-align:center;border-top:1px solid #222;color:#aaa}
+@media(max-width:900px){
+.hero h1{font-size:40px}
+.about{grid-template-columns:1fr}
+.menu a{display:none}
 }
-
-h1{
-    font-size:60px;
-}
-
 </style>
-
 </head>
 <body>
 
-<h1>BK HausConcept</h1>
+<header>
+<div class="nav">
+<div class="logo">BK HausConcept</div>
+<div class="menu">
+<a href="#home">Startseite</a>
+<a href="#services">Leistungen</a>
+<a href="#projects">Projekte</a>
+<a href="#about">Über Uns</a>
+<a href="#contact">Kontakt</a>
+<div class="flags"><span>🇩🇪</span><span>🇬🇧</span><span>🇷🇺</span><span>🇺🇦</span></div>
+</div>
+</div>
+</header>
+
+<section class="hero" id="home">
+<div class="hero-content">
+<img src="logo.jpg" alt="BK HausConcept">
+<h1>Wir verwandeln Ihre Immobilie in ein Meisterwerk</h1>
+<p>Hochwertige Renovierungs-, Ausbau- und Modernisierungsarbeiten in Mönchengladbach und Nordrhein-Westfalen.</p>
+<a href="#contact" class="btn">Kostenlose Beratung</a>
+</div>
+</section>
+
+<section id="services">
+<h2 class="title">Leistungen</h2>
+<div class="grid">
+<div class="card">Renovierung</div>
+<div class="card">Kernsanierung</div>
+<div class="card">Trockenbau</div>
+<div class="card">Malerarbeiten</div>
+<div class="card">Fliesenarbeiten</div>
+<div class="card">Bodenverlegung</div>
+<div class="card">Badezimmer</div>
+<div class="card">Innenausbau</div>
+<div class="card">Erdarbeiten</div>
+</div>
+</section>
+
+<section id="projects">
+<h2 class="title">Projekte</h2>
+<div class="projects">
+<div class="project">Projekt 01</div>
+<div class="project">Projekt 02</div>
+<div class="project">Projekt 03</div>
+<div class="project">Projekt 04</div>
+<div class="project">Projekt 05</div>
+<div class="project">Projekt 06</div>
+</div>
+</section>
+
+<section id="about">
+<h2 class="title">Über Uns</h2>
+<div class="about">
+<div>
+<p>BK HausConcept steht für Qualität, Zuverlässigkeit und präzise Ausführung. Wir begleiten unsere Kunden von der ersten Idee bis zur Fertigstellung.</p>
+</div>
+<div>
+<ul>
+<li>✓ Zuverlässigkeit</li>
+<li>✓ Qualität</li>
+<li>✓ Saubere Ausführung</li>
+<li>✓ Termintreue</li>
+<li>✓ Transparente Kommunikation</li>
+<li>✓ Individuelle Lösungen</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section>
+<h2 class="title">Einsatzgebiet</h2>
+<p>Mönchengladbach, Viersen, Neuss, Krefeld und Düsseldorf.</p>
+<p>Projekte in ganz NRW nach individueller Vereinbarung möglich.</p>
+</section>
+
+<section id="contact">
+<div class="contact">
+<h2 class="title">Kontakt</h2>
+<p><strong>E-Mail:</strong> bk.hausconcept@gmail.com</p>
+<p><strong>Instagram:</strong> @bkhausconcept</p>
+<p><strong>WhatsApp:</strong> folgt in Kürze</p>
+<br>
+<p><strong>Inhaber:</strong> Bohdan Koziar</p>
+<p>Ferdinandstraße 31, 41061 Mönchengladbach</p>
+</div>
+</section>
+
+<footer>
+BK HausConcept © 2025 | Impressum | Datenschutz
+</footer>
 
 </body>
 </html>
