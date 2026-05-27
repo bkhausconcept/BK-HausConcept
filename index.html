@@ -5,71 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BK HausConcept</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Poppins;background:#111;color:#fff;overflow-x:hidden}
+body{font-family:Inter;background:#0f0f0f;color:#fff;overflow-x:hidden}
 
+/* HEADER */
 header{
 position:fixed;
 top:0;width:100%;
-background:rgba(0,0,0,0.8);
-backdrop-filter:blur(10px);
+background:rgba(0,0,0,0.9);
 display:flex;
 justify-content:space-between;
-padding:15px 20px;
-z-index:1000
+align-items:center;
+padding:15px;
+z-index:1000;
+}
+
+nav{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
 }
 
 nav a{
-color:white;
-margin:0 8px;
+color:#fff;
 text-decoration:none;
-font-size:13px
+font-size:13px;
 }
 
-.lang{font-size:12px}
+.lang button{
+background:none;
+border:1px solid #444;
+color:#fff;
+padding:3px 6px;
+cursor:pointer;
+}
 
+/* HERO */
 .hero{
-margin-top:80px;
-text-align:center;
-padding:40px 10px;
+margin-top:70px;
 }
 
 .hero img{
 width:100%;
-max-height:220px;
+height:220px;
 object-fit:cover;
-opacity:0.7
+filter:brightness(60%);
 }
 
+/* SECTIONS */
 section{
 padding:40px 15px;
 max-width:1000px;
-margin:auto
+margin:auto;
 }
 
 h2{margin-bottom:15px}
 
+/* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:15px
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:10px;
 }
 
 .card{
-background:#1a1a1a;
+background:#1c1c1c;
 padding:15px;
-border-radius:10px;
-text-align:center
+border-radius:8px;
+text-align:center;
 }
 
-.carousel{
-position:relative;
-overflow:hidden;
-}
-
+/* CAROUSEL */
 .carousel img{
 width:100%;
 display:none;
@@ -78,69 +87,91 @@ border-radius:10px;
 
 .carousel img.active{display:block}
 
-.controls{
-text-align:center;
-margin-top:10px;
-}
-
+/* BUTTON */
 button{
-padding:8px 15px;
-background:#d4af37;
+padding:8px 12px;
+background:#fff;
+color:#000;
 border:none;
-color:black;
 cursor:pointer;
+margin:5px;
 }
 
-.contact input,.contact textarea{
+/* CONTACT */
+input,textarea{
 width:100%;
 margin-bottom:10px;
 padding:10px;
-background:#222;
+background:#1c1c1c;
 border:none;
-color:white
+color:#fff;
 }
 
+/* FOOTER */
 footer{
 text-align:center;
-padding:20px;
 font-size:12px;
-color:#aaa
+padding:20px;
+color:#888;
 }
+
+/* MODAL */
+.modal{
+display:none;
+position:fixed;
+top:0;left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+padding:20px;
+}
+
+.modal-content{
+background:#111;
+padding:20px;
+max-width:500px;
+margin:auto;
+margin-top:100px;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-<div>BK HausConcept</div>
+<div><b>BK HausConcept</b></div>
+
 <nav>
-<a href="#home">Start</a>
-<a href="#services">Leistungen</a>
-<a href="#projects">Projekte</a>
-<a href="#about">Über uns</a>
-<a href="#contact">Kontakt</a>
-<span class="lang">DE | EN | RU | UA</span>
+<a href="#home">Home</a>
+<a href="#services">Services</a>
+<a href="#projects">Projects</a>
+<a href="#about">About</a>
+<a href="#contact">Contact</a>
 </nav>
+
+<div class="lang">
+<button onclick="setLang('de')">DE</button>
+<button onclick="setLang('en')">EN</button>
+<button onclick="setLang('ru')">RU</button>
+<button onclick="setLang('ua')">UA</button>
+</div>
+
 </header>
 
 <div class="hero" id="home">
 <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e">
-<h1>BK HausConcept</h1>
-<p>Renovierung & Innenausbau in NRW</p>
 </div>
 
 <section id="services">
-<h2>Leistungen</h2>
+<h2 data-de="Leistungen" data-en="Services" data-ru="Услуги" data-ua="Послуги">Leistungen</h2>
 <div class="grid">
 <div class="card">Renovierung</div>
-<div class="card">Kernsanierung</div>
-<div class="card">Trockenbau</div>
 <div class="card">Fliesen</div>
+<div class="card">Trockenbau</div>
 <div class="card">Boden</div>
-<div class="card">Malerarbeiten</div>
+<div class="card">Maler</div>
 <div class="card">Badezimmer</div>
-<div class="card">Innenausbau</div>
-<div class="card">Erdarbeiten</div>
 </div>
 </section>
 
@@ -153,21 +184,25 @@ color:#aaa
 <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb">
 </div>
 
-<div class="controls">
+<div style="text-align:center">
 <button onclick="prev()">◀</button>
 <button onclick="next()">▶</button>
 </div>
 
-<p style="font-size:12px;margin-top:10px">Beispielbilder</p>
+<p style="font-size:12px">* Beispielbilder</p>
 
 </section>
 
 <section id="about">
 <h2>Über uns</h2>
-<p>Bohdan Koziar – Mönchengladbach</p>
+<p>
+BK HausConcept – строительная компания в NRW.  
+Делаем ремонт квартир, домов, ванных комнат.  
+Работаем аккуратно и под ключ.
+</p>
 </section>
 
-<section id="contact" class="contact">
+<section id="contact">
 <h2>Kontakt</h2>
 
 <form action="https://formspree.io/f/mpqnoqnp" method="POST">
@@ -177,13 +212,48 @@ color:#aaa
 <button type="submit">Senden</button>
 </form>
 
+<p>
+📧 bk.hausconcept@gmail.com<br>
+📷 Instagram<br>
+💬 WhatsApp
+</p>
+
 </section>
 
 <footer>
-Impressum | Datenschutz | Cookies
+<a href="#" onclick="openModal('impressum')">Impressum</a> |
+<a href="#" onclick="openModal('datenschutz')">Datenschutz</a> |
+<a href="#" onclick="openModal('cookies')">Cookies</a>
 </footer>
 
+<!-- MODALS -->
+<div id="impressum" class="modal">
+<div class="modal-content">
+<h3>Impressum</h3>
+<p>Bohdan Koziar<br>Mönchengladbach</p>
+<button onclick="closeModal('impressum')">OK</button>
+</div>
+</div>
+
+<div id="datenschutz" class="modal">
+<div class="modal-content">
+<h3>Datenschutz</h3>
+<p>Ihre Daten werden vertraulich behandelt.</p>
+<button onclick="closeModal('datenschutz')">OK</button>
+</div>
+</div>
+
+<div id="cookies" class="modal">
+<div class="modal-content">
+<h3>Cookies</h3>
+<p>Diese Seite verwendet Cookies.</p>
+<button onclick="closeModal('cookies')">OK</button>
+</div>
+</div>
+
 <script>
+
+/* CAROUSEL */
 let slides=document.querySelectorAll(".carousel img")
 let index=0
 
@@ -203,6 +273,23 @@ show(index)
 }
 
 setInterval(next,4000)
+
+/* LANGUAGE */
+function setLang(lang){
+document.querySelectorAll("[data-"+lang+"]").forEach(el=>{
+el.innerText=el.getAttribute("data-"+lang)
+})
+}
+
+/* MODAL */
+function openModal(id){
+document.getElementById(id).style.display="block"
+}
+
+function closeModal(id){
+document.getElementById(id).style.display="none"
+}
+
 </script>
 
 </body>
