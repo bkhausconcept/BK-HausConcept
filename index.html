@@ -1,583 +1,1095 @@
-<!doctype html>
-<html lang="en" class="dark">
-  <head>
-    <!-- Prevent theme flash: Apply stored theme immediately before page renders -->
-    <script>
-      (function () {
-        try {
-          var theme = localStorage.getItem("emergent-theme");
-          if (!theme) {
-            var isLoggedIn = Object.keys(localStorage).some(function (k) {
-              return k.startsWith("sb-") && k.endsWith("-auth-token");
-            });
-            theme = isLoggedIn ? "dark" : "system";
-          }
-          if (theme === "light" || (theme === "system" && window.matchMedia("(prefers-color-scheme: light)").matches)) {
-            document.documentElement.classList.remove("dark");
-            document.documentElement.classList.add("light");
-          }
-        } catch (e) {}
-      })();
-    </script>
-    <!-- Tracking allowlist — gates GTM/VWO/Rewardful/PartnerStack/Meta Pixel to prod hosts only.
-         Prevents third-party tracking scripts from firing on preview/CDN hosts (e.g. *.preview.emergentagent.com)
-         where our bundle is served as a wake-up page, which would attribute pixel events to user-preview domains. -->
-    <script>
-      (function () {
-        var ALLOWED_TRACKING_HOSTS = ["app.emergent.sh", "dev.emergentagent.com"];
-        window.__emergentTrackingAllowed = ALLOWED_TRACKING_HOSTS.indexOf(window.location.hostname) !== -1;
-        var h = window.location.hostname;
-        window.__wingmanTrackingAllowed = h.indexOf("getwingman.sh") !== -1 || h.indexOf("getwingman.com") !== -1;
-      })();
-    </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
-    <!-- DNS Prefetch and Preconnect for external services -->
-    <link rel="dns-prefetch" href="https://assets.emergent.sh" />
-    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://assets.emergent.sh" crossorigin />
-    <link rel="preconnect" href="https://dev.visualwebsiteoptimizer.com" />
-    <link rel="preconnect" href="https://js.stripe.com" />
-
-    <!-- Primary Meta Tags -->
-    <title>Emergent</title>
-    <meta name="title" content="Emergent - AI-Powered App Development | No Code Required" />
-    <meta
-      name="description"
-      content="Transform ideas into production-ready applications with AI. Build web apps, mobile platforms, and custom software through simple conversation, no coding required."
-    />
-    <meta
-      name="keywords"
-      content="no-code development, AI app builder, software development, web app creator, mobile app development, AI coding assistant"
-    />
-    <meta name="author" content="Emergent" />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://emergent.sh/" />
-    <meta property="og:title" content="Emergent - AI-Powered App Development | No Code Required" />
-    <meta
-      property="og:description"
-      content="From idea to app in minutes. AI-powered development platform for creators, entrepreneurs, and developers."
-    />
-    <meta property="og:image" content="https://app.emergent.sh/logo.png" />
-    <script>
-      (function () {
-        var h = window.location.hostname;
-        var isWingman = h.includes("getwingman.sh") || h.includes("getwingman.com");
-        var m = document.createElement("meta");
-        m.name = "facebook-domain-verification";
-        m.content = isWingman ? "669ilma0h2dlj0a8ou27f0f0gdq2at" : "v1096rpo7sp3nzp96d9ik3cvgwzodd";
-        document.head.appendChild(m);
-      })();
-    </script>
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://emergent.sh/" />
-    <meta property="twitter:title" content="Emergent - AI-Powered App Development | No Code Required" />
-    <meta
-      property="twitter:description"
-      content="Build real products with Emergent's vibe-coding platform. Emergent AI creates production-ready applications from natural language—no developers required."
-    />
-    <meta property="twitter:image" content="https://app.emergent.sh/twitter-image.jpg" />
-
-    <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/assets/site-B8Ol4jaE.webmanifest" />
-
-    <!-- Preload cloud background only for light-mode users -->
-    <script>
-      (function () {
-        try {
-          var theme = localStorage.getItem("emergent-theme");
-          if (!theme) {
-            var isLoggedIn = Object.keys(localStorage).some(function (k) {
-              return k.startsWith("sb-") && k.endsWith("-auth-token");
-            });
-            theme = isLoggedIn ? "dark" : "system";
-          }
-          var isLight =
-            theme === "light" || (theme === "system" && window.matchMedia("(prefers-color-scheme: light)").matches);
-          if (isLight) {
-            var link = document.createElement("link");
-            link.rel = "preload";
-            link.as = "image";
-            link.type = "image/webp";
-            link.href = "/backgrounds/light_cloud_bg.webp";
-            document.head.appendChild(link);
-          }
-        } catch (e) {}
-      })();
-    </script>
-
-    <!-- Fonts and Styles - Preconnect for better performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://emergent.sh/" />
-    <script>
-      if (window.__emergentTrackingAllowed) {
-        (function (w, d, s, l, i) {
-          w[l] = w[l] || [];
-          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-          var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s),
-            dl = l != "dataLayer" ? "&l=" + l : "";
-          j.async = true;
-          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-          f.parentNode.insertBefore(j, f);
-        })(window, document, "script", "dataLayer", "GTM-NCCB99P9");
-      }
-    </script>
-    <!-- Google tag (gtag.js) — Wingman only (gated by __wingmanTrackingAllowed) -->
-    <script>
-      (function () {
-        if (!window.__wingmanTrackingAllowed) return;
-        var s = document.createElement("script");
-        s.async = true;
-        s.src = "https://www.googletagmanager.com/gtag/js?id=G-Y61DH5D90B";
-        document.head.appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          window.dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-        gtag("config", "G-Y61DH5D90B");
-      })();
-    </script>
-    <!-- Conditionally load Rewardful for affiliate users only -->
-    <script>
-      (function () {
-        if (!window.__emergentTrackingAllowed) return;
-        // Helper to get cookie by name
-        function getCookieValue(name) {
-          var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-          return match ? match[2] : null;
+"<!DOCTYPE html>
+<html lang=\"de\">
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <meta name=\"description\" content=\"BK HausConcept - Premium Bau- und Renovierungsunternehmen in NRW. Kernsanierung, Trockenbau, Fliesen, Badezimmer, Innenausbau.\">
+    <meta name=\"keywords\" content=\"Renovierung NRW, Kernsanierung, Trockenbau, Fliesen, Badsanierung, Innenausbau, Bauunternehmen NRW\">
+    <title>BK HausConcept - Premium Bauunternehmen NRW | Renovierung & Sanierung</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            color: #1a1a1a;
         }
 
-        // Check if user is from affiliate link
-        function isAffiliateUser() {
-          var urlParams = new URLSearchParams(window.location.search);
-          var affiliateParams = ["via", "referral", "ref", "affiliate", "aff", "affid"];
-
-          // Check URL parameters
-          for (var i = 0; i < affiliateParams.length; i++) {
-            if (urlParams.get(affiliateParams[i])) {
-              // console.log('[Rewardful] ✅ Affiliate param found:', affiliateParams[i]);
-              return true;
-            }
-          }
-
-          // Check if rewardful cookie already exists (returning affiliate user)
-          // Use proper cookie parsing to avoid false positives from other cookies containing the string
-          var rewardfulReferral = getCookieValue("rewardful.referral");
-          var rewardfulAffiliate = getCookieValue("rewardful_affiliate");
-          var viaCookie = getCookieValue("via");
-
-          if (rewardfulReferral || rewardfulAffiliate || viaCookie) {
-            // console.log('[Rewardful] ✅ Returning affiliate user (cookie found)');
-            return true;
-          }
-
-          // console.log('[Rewardful] ⛔ Organic user - skipping Rewardful');
-          return false;
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        // Only load Rewardful for affiliate users
-        if (isAffiliateUser()) {
-          // console.log('[Rewardful] 🎯 Loading Rewardful script');
-
-          // Initialize queue
-          (function (w, r) {
-            w._rwq = r;
-            w[r] =
-              w[r] ||
-              function () {
-                (w[r].q = w[r].q || []).push(arguments);
-              };
-          })(window, "rewardful");
-
-          // Load script
-          var script = document.createElement("script");
-          script.src = "https://r.wdfl.co/rw.js";
-          script.async = true;
-          script.setAttribute("data-rewardful", "981168");
-          document.head.appendChild(script);
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-      })();
-    </script>
-    <!-- Start VWO Async SmartCode -->
-    <script type="text/javascript" id="vwoCode">
-      window._vwo_code ||
-        (function () {
-          if (!window.__emergentTrackingAllowed) return;
-          var w = window,
-            d = document;
-          var account_id = 1188541,
-            version = 2.2,
-            settings_tolerance = 2000,
-            hide_element = "body",
-            hide_element_style = "opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important",
-            f = 0;
-          /* DO NOT EDIT BELOW THIS LINE */
-          if (
-            ((f = !1),
-            (v = d.querySelector("#vwoCode")),
-            (cc = {}),
-            -1 < d.URL.indexOf("__vwo_disable__") || w._vwo_code)
-          )
-            return;
-          try {
-            var e = JSON.parse(localStorage.getItem("_vwo_" + account_id + "_config"));
-            cc = e && "object" == typeof e ? e : {};
-          } catch (e) {}
-          function r(t) {
-            try {
-              return decodeURIComponent(t);
-            } catch (e) {
-              return t;
-            }
-          }
-          var s = (function () {
-            var e = {
-                combination: [],
-                combinationChoose: [],
-                split: [],
-                exclude: [],
-                uuid: null,
-                consent: null,
-                optOut: null,
-              },
-              t = d.cookie || "";
-            if (!t) return e;
-            for (
-              var n,
-                i,
-                o =
-                  /(?:^|;\s*)(?:(_vis_opt_exp_(\d+)_combi=([^;]*))|(_vis_opt_exp_(\d+)_combi_choose=([^;]*))|(_vis_opt_exp_(\d+)_split=([^:;]*))|(_vis_opt_exp_(\d+)_exclude=[^;]*)|(_vis_opt_out=([^;]*))|(_vwo_global_opt_out=[^;]*)|(_vwo_uuid=([^;]*))|(_vwo_consent=([^;]*)))/g;
-              null !== (n = o.exec(t));
-            )
-              try {
-                n[1]
-                  ? e.combination.push({ id: n[2], value: r(n[3]) })
-                  : n[4]
-                    ? e.combinationChoose.push({ id: n[5], value: r(n[6]) })
-                    : n[7]
-                      ? e.split.push({ id: n[8], value: r(n[9]) })
-                      : n[10]
-                        ? e.exclude.push({ id: n[11] })
-                        : n[12]
-                          ? (e.optOut = r(n[13]))
-                          : n[14]
-                            ? (e.optOut = !0)
-                            : n[15]
-                              ? (e.uuid = r(n[16]))
-                              : n[17] && ((i = r(n[18])), (e.consent = i && 3 <= i.length ? i.substring(0, 3) : null));
-              } catch (e) {}
-            return e;
-          })();
-          function i() {
-            var e = (function () {
-                if (w.VWO && Array.isArray(w.VWO))
-                  for (var e = 0; e < w.VWO.length; e++) {
-                    var t = w.VWO[e];
-                    if (Array.isArray(t) && ("setVisitorId" === t[0] || "setSessionId" === t[0])) return !0;
-                  }
-                return !1;
-              })(),
-              t =
-                "a=" +
-                account_id +
-                "&u=" +
-                encodeURIComponent(w._vis_opt_url || d.URL) +
-                "&vn=" +
-                version +
-                "&ph=1" +
-                ("undefined" != typeof platform ? "&p=" + platform : "") +
-                "&st=" +
-                w.performance.now();
-            (e ||
-              ((n = (function () {
-                var e,
-                  t = [],
-                  n = {},
-                  i = (w.VWO && w.VWO.appliedCampaigns) || {};
-                for (e in i) {
-                  var o = i[e] && i[e].v;
-                  o && (t.push(e + "-" + o + "-1"), (n[e] = !0));
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-img {
+            height: 48px;
+            width: 48px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .logo-text {
+            color: white;
+            font-weight: 300;
+            font-size: 1.25rem;
+            letter-spacing: 0.05em;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: black;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: rgba(0, 0, 0, 0.98);
+            padding: 1.5rem;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"100\" height=\"100\" fill=\"none\"/><path d=\"M0 50 L100 50 M50 0 L50 100\" stroke=\"rgba(255,255,255,0.02)\" stroke-width=\"1\"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 0 1.5rem;
+            max-width: 56rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            font-weight: 300;
+            color: white;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero p {
+            font-size: clamp(1.125rem, 3vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.025em;
+        }
+
+        .cta-button {
+            background: white;
+            color: black;
+            padding: 1.5rem 2.5rem;
+            font-size: 1.125rem;
+            letter-spacing: 0.05em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 400;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Services */
+        .services {
+            padding: 6rem 1.5rem;
+            background: white;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .section-header p {
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 1.125rem;
+            letter-spacing: 0.025em;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+        }
+
+        .service-card:hover {
+            border-color: black;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(-12px);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            letter-spacing: 0.025em;
+        }
+
+        .service-card p {
+            color: rgba(0, 0, 0, 0.7);
+            line-height: 1.8;
+            letter-spacing: 0.01em;
+            font-size: 0.95rem;
+        }
+
+        /* Projects */
+        .projects {
+            padding: 6rem 1.5rem;
+            background: #0a0a0a;
+            color: white;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            cursor: pointer;
+            background: #1a1a1a;
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .project-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .project-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        /* Reviews */
+        .reviews {
+            padding: 6rem 1.5rem;
+            background: #f5f5f5;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .review-card {
+            background: white;
+            padding: 2.5rem;
+            border-left: 4px solid black;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+
+        .review-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .review-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.8);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .review-author {
+            font-weight: 500;
+            color: black;
+        }
+
+        .review-rating {
+            color: #f59e0b;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* About */
+        .about {
+            padding: 6rem 1.5rem;
+            background: white;
+        }
+
+        .about-content {
+            max-width: 56rem;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .about p {
+            font-size: 1.125rem;
+            color: rgba(0, 0, 0, 0.7);
+            line-height: 1.8;
+            letter-spacing: 0.025em;
+        }
+
+        /* Contact */
+        .contact {
+            padding: 6rem 1.5rem;
+            background: black;
+            color: white;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1280px;
+            margin: 3rem auto 0;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            padding: 1.25rem 2rem;
+            background: white;
+            color: black;
+            border: none;
+            font-size: 1.125rem;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid white;
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(8px);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+        }
+
+        .contact-details h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .contact-details a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-details a:hover {
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 2.5rem 1.5rem;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: rgba(0, 0, 0, 0.6);
+            text-decoration: none;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: black;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            color: black;
+            border: none;
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 3000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .lang-switcher { display: none; }
+            .mobile-menu-btn { display: block; }
+            .services-grid { grid-template-columns: 1fr; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .reviews-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .footer-container { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class=\"header-container\">
+            <div class=\"logo-section\">
+                <img src=\"logo.jpg\" alt=\"BK HausConcept Logo\" class=\"logo-img\" onerror=\"this.style.display='none'\">
+                <span class=\"logo-text\">BK HausConcept</span>
+            </div>
+
+            <nav>
+                <a href=\"#home\" data-translate=\"nav.home\">Home</a>
+                <a href=\"#services\" data-translate=\"nav.services\">Leistungen</a>
+                <a href=\"#projects\" data-translate=\"nav.projects\">Projekte</a>
+                <a href=\"#reviews\" data-translate=\"nav.reviews\">Bewertungen</a>
+                <a href=\"#about\" data-translate=\"nav.about\">Über uns</a>
+                <a href=\"#contact\" data-translate=\"nav.contact\">Kontakt</a>
+            </nav>
+
+            <div class=\"lang-switcher\">
+                <button class=\"lang-btn active\" data-lang=\"de\">DE</button>
+                <button class=\"lang-btn\" data-lang=\"en\">EN</button>
+                <button class=\"lang-btn\" data-lang=\"ru\">RU</button>
+                <button class=\"lang-btn\" data-lang=\"ua\">UA</button>
+            </div>
+
+            <button class=\"mobile-menu-btn\" onclick=\"toggleMobileMenu()\">☰</button>
+        </div>
+
+        <div class=\"mobile-menu\" id=\"mobile-menu\">
+            <div class=\"mobile-nav\">
+                <a href=\"#home\" onclick=\"toggleMobileMenu()\" data-translate=\"nav.home\">Home</a>
+                <a href=\"#services\" onclick=\"toggleMobileMenu()\" data-translate=\"nav.services\">Leistungen</a>
+                <a href=\"#projects\" onclick=\"toggleMobileMenu()\" data-translate=\"nav.projects\">Projekte</a>
+                <a href=\"#reviews\" onclick=\"toggleMobileMenu()\" data-translate=\"nav.reviews\">Bewertungen</a>
+                <a href=\"#about\" onclick=\"toggleMobileMenu()\" data-translate=\"nav.about\">Über uns</a>
+                <a href=\"#contact\" onclick=\"toggleMobileMenu()\" data-translate=\"nav.contact\">Kontakt</a>
+            </div>
+            <div class=\"lang-switcher\">
+                <button class=\"lang-btn active\" data-lang=\"de\">DE</button>
+                <button class=\"lang-btn\" data-lang=\"en\">EN</button>
+                <button class=\"lang-btn\" data-lang=\"ru\">RU</button>
+                <button class=\"lang-btn\" data-lang=\"ua\">UA</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section id=\"home\" class=\"hero\">
+        <div class=\"hero-content\">
+            <h1 data-translate=\"hero.title\">BK HausConcept</h1>
+            <p data-translate=\"hero.subtitle\">Premium Bau- und Renovierungsunternehmen in NRW</p>
+            <button class=\"cta-button\" onclick=\"document.getElementById('contact').scrollIntoView({behavior: 'smooth'})\" data-translate=\"hero.cta\">
+                Kostenlose Beratung
+            </button>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id=\"services\" class=\"services\">
+        <div class=\"container\">
+            <div class=\"section-header\">
+                <h2 data-translate=\"services.title\">Unsere Leistungen</h2>
+                <p data-translate=\"services.subtitle\">Professionelle Baudienstleistungen mit höchsten Qualitätsstandards</p>
+            </div>
+            <div class=\"services-grid\" id=\"services-grid\"></div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id=\"projects\" class=\"projects\">
+        <div class=\"container\">
+            <div class=\"section-header\">
+                <h2 data-translate=\"projects.title\">Unsere Projekte</h2>
+                <p data-translate=\"projects.subtitle\">Einblicke in unsere abgeschlossenen Arbeiten</p>
+            </div>
+            <div class=\"projects-grid\" id=\"projects-grid\"></div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section id=\"reviews\" class=\"reviews\">
+        <div class=\"container\">
+            <div class=\"section-header\">
+                <h2 data-translate=\"reviews.title\">Kundenbewertungen</h2>
+                <p data-translate=\"reviews.subtitle\">Was unsere Kunden über uns sagen</p>
+            </div>
+            <div class=\"reviews-grid\" id=\"reviews-grid\"></div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id=\"about\" class=\"about\">
+        <div class=\"about-content\">
+            <h2 data-translate=\"about.title\">Über BK HausConcept</h2>
+            <p data-translate=\"about.text\">
+                BK HausConcept – Ihr zuverlässiges Bauunternehmen in NRW. 
+                Wir sind spezialisiert auf hochwertige Wohnungs-, Haus- und Badsanierungen. 
+                Mit jahrelanger Erfahrung, präziser Handwerkskunst und einem Auge fürs Detail 
+                verwandeln wir Ihre Räume in moderne, funktionale und ästhetische Lebensräume. 
+                Saubere Arbeit, zuverlässiger Service und Full-Cycle-Projektmanagement – 
+                von der Planung bis zur Schlüsselübergabe.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id=\"contact\" class=\"contact\">
+        <div class=\"container\">
+            <div class=\"section-header\">
+                <h2 data-translate=\"contact.title\">Kontakt</h2>
+                <p data-translate=\"contact.subtitle\">Nehmen Sie Kontakt mit uns auf</p>
+            </div>
+
+            <div class=\"contact-grid\">
+                <form class=\"contact-form\" id=\"contact-form\">
+                    <input type=\"text\" class=\"form-input\" placeholder=\"Name\" data-translate-placeholder=\"contact.form.name\" required>
+                    <input type=\"email\" class=\"form-input\" placeholder=\"E-Mail\" data-translate-placeholder=\"contact.form.email\" required>
+                    <input type=\"tel\" class=\"form-input\" placeholder=\"Telefon\" data-translate-placeholder=\"contact.form.phone\">
+                    <textarea class=\"form-textarea\" placeholder=\"Nachricht\" data-translate-placeholder=\"contact.form.message\" required></textarea>
+                    <button type=\"submit\" class=\"submit-btn\" data-translate=\"contact.form.submit\">Nachricht senden</button>
+                </form>
+
+                <div class=\"contact-info\">
+                    <div class=\"contact-item\">
+                        <div class=\"contact-icon\">✉</div>
+                        <div class=\"contact-details\">
+                            <h3 data-translate=\"contact.email.title\">E-Mail</h3>
+                            <a href=\"mailto:bk.hausconcept@gmail.com\">bk.hausconcept@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class=\"contact-item\">
+                        <div class=\"contact-icon\">📱</div>
+                        <div class=\"contact-details\">
+                            <h3 data-translate=\"contact.whatsapp.title\">WhatsApp</h3>
+                            <a href=\"https://wa.me/491234567890\" target=\"_blank\" data-translate=\"contact.whatsapp.text\">Nachricht schreiben</a>
+                        </div>
+                    </div>
+                    <div class=\"contact-item\">
+                        <div class=\"contact-icon\">📷</div>
+                        <div class=\"contact-details\">
+                            <h3>Instagram</h3>
+                            <a href=\"https://instagram.com/bk_hausconcept\" target=\"_blank\">@bk_hausconcept</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class=\"footer-container\">
+            <p class=\"footer-text\">© 2025 BK HausConcept. Alle Rechte vorbehalten.</p>
+            <div class=\"footer-links\">
+                <a href=\"#impressum\">Impressum</a>
+                <a href=\"#datenschutz\">Datenschutz</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id=\"modal\" class=\"modal\" onclick=\"closeModal()\">
+        <button class=\"modal-close\" onclick=\"closeModal()\">×</button>
+        <img id=\"modal-img\" src=\"\" alt=\"Projekt Detailansicht\">
+    </div>
+
+    <!-- Toast -->
+    <div id=\"toast\" class=\"toast\"></div>
+
+    <script>
+        // Best 10 project images
+        const projectImages = [
+            'IMG_5241.jpg',
+            'IMG_5570.jpg',
+            'IMG_6014.jpg',
+            'IMG_5240.jpg',
+            'IMG_6092.jpg',
+            'IMG_5243.jpg',
+            'IMG_5586.jpg',
+            'IMG_4748.jpg',
+            'IMG_6108.jpg',
+            'IMG_5246.jpg'
+        ];
+
+        const translations = {
+            de: {
+                nav: { home: 'Home', services: 'Leistungen', projects: 'Projekte', reviews: 'Bewertungen', about: 'Über uns', contact: 'Kontakt' },
+                hero: { title: 'BK HausConcept', subtitle: 'Premium Bau- und Renovierungsunternehmen in NRW', cta: 'Kostenlose Beratung' },
+                services: {
+                    title: 'Unsere Leistungen',
+                    subtitle: 'Professionelle Baudienstleistungen mit höchsten Qualitätsstandards',
+                    list: [
+                        { 
+                            title: 'Renovierung', 
+                            desc: 'Komplette Wohnungsrenovierung von A bis Z. Wir übernehmen alle Gewerke – vom Grundriss bis zur finalen Gestaltung. Modernisierung Ihrer Räume mit hochwertigen Materialien und präziser Handwerkskunst.'
+                        },
+                        { 
+                            title: 'Kernsanierung', 
+                            desc: 'Umfassende Sanierungsprojekte für Altbauten und Bestandsimmobilien. Strukturelle Erneuerung von Wänden, Böden, Decken sowie komplette Elektrik- und Sanitärinstallationen. Energetische Optimierung inklusive.'
+                        },
+                        { 
+                            title: 'Trockenbau', 
+                            desc: 'Moderne Trockenbaulösungen für flexible Raumgestaltung. Wände, Decken, Vorsatzschalen und Akustikdecken. Schnelle, saubere Installation mit perfekter Oberflächenqualität für anschließende Malerarbeiten.'
+                        },
+                        { 
+                            title: 'Fliesen', 
+                            desc: 'Professionelle Fliesenverlegung in Bad, Küche und Wohnbereichen. Präzise Arbeit mit allen Materialien – Keramik, Naturstein, Großformat. Perfekte Fugenarbeit und wasserdichte Abdichtung garantiert.'
+                        },
+                        { 
+                            title: 'Boden', 
+                            desc: 'Verlegung aller Bodenbeläge: Parkett, Laminat, Vinyl, Fliesen. Professionelle Vorbereitung des Untergrunds, präziser Zuschnitt und fugenlose Verlegung. Langjährige Haltbarkeit durch fachgerechte Ausführung.'
+                        },
+                        { 
+                            title: 'Malerarbeiten', 
+                            desc: 'Hochwertige Malerarbeiten für Innenräume. Spachtel-, Grundier- und Streicharbeiten mit erstklassigen Farben. Kreative Wandgestaltung, Strukturtechniken und individuelle Farbkonzepte nach Ihren Wünschen.'
+                        },
+                        { 
+                            title: 'Badezimmer', 
+                            desc: 'Komplette Badsanierung vom Konzept bis zur Fertigstellung. Moderne Sanitärtechnik, elegante Fliesen, barrierefreie Lösungen. Wir schaffen Ihr Traumbad – funktional, stilvoll und langlebig.'
+                        },
+                        { 
+                            title: 'Innenausbau', 
+                            desc: 'Individueller Innenausbau nach Maß. Einbauschränke, Regalsysteme, Raumteiler und maßgeschneiderte Lösungen. Perfekte Integration in Ihre Wohnräume mit höchster Verarbeitungsqualität.'
+                        }
+                    ]
+                },
+                projects: { title: 'Unsere Projekte', subtitle: 'Einblicke in unsere abgeschlossenen Arbeiten' },
+                reviews: {
+                    title: 'Kundenbewertungen',
+                    subtitle: 'Was unsere Kunden über uns sagen',
+                    list: [
+                        { text: 'Hervorragende Arbeit! BK HausConcept hat unsere Wohnung komplett renoviert. Alles wurde termingerecht und sauber durchgeführt. Das Team war stets freundlich und professionell. Absolut empfehlenswert!', author: 'Michael S., Essen' },
+                        { text: 'Wir sind begeistert von unserem neuen Badezimmer! Die Beratung war ausgezeichnet und die Umsetzung perfekt. Qualität und Preis-Leistung stimmen zu 100%. Vielen Dank an das gesamte Team!', author: 'Familie Müller, Dortmund' },
+                        { text: 'Professionell, zuverlässig und pünktlich. Die Kernsanierung unseres Altbaus wurde exakt nach Plan durchgeführt. Besonders beeindruckend war die Sauberkeit auf der Baustelle. Gerne wieder!', author: 'Anna K., Düsseldorf' },
+                        { text: 'Top Handwerker! Von der ersten Besichtigung bis zur Übergabe lief alles reibungslos. Faire Preise, transparente Kommunikation und erstklassige Qualität. Wir können BK HausConcept uneingeschränkt weiterempfehlen.', author: 'Thomas B., Bochum' }
+                    ]
+                },
+                about: { 
+                    title: 'Über BK HausConcept', 
+                    text: 'BK HausConcept – Ihr zuverlässiges Bauunternehmen in NRW. Wir sind spezialisiert auf hochwertige Wohnungs-, Haus- und Badsanierungen. Mit jahrelanger Erfahrung, präziser Handwerkskunst und einem Auge fürs Detail verwandeln wir Ihre Räume in moderne, funktionale und ästhetische Lebensräume. Saubere Arbeit, zuverlässiger Service und Full-Cycle-Projektmanagement – von der Planung bis zur Schlüsselübergabe.' 
+                },
+                contact: {
+                    title: 'Kontakt',
+                    subtitle: 'Nehmen Sie Kontakt mit uns auf',
+                    form: { name: 'Name', email: 'E-Mail', phone: 'Telefon', message: 'Nachricht', submit: 'Nachricht senden' },
+                    email: { title: 'E-Mail' },
+                    whatsapp: { title: 'WhatsApp', text: 'Nachricht schreiben' },
+                    success: 'Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet. Wir melden uns bald bei Ihnen.'
                 }
-                if (s && s.combination)
-                  for (var r = 0; r < s.combination.length; r++) {
-                    var a = s.combination[r];
-                    n[a.id] || t.push(a.id + "-" + a.value);
-                  }
-                return t.join("|");
-              })()) && (t += "&c=" + n),
-              (n = (function () {
-                var e = [],
-                  t = {};
-                if (s && s.combinationChoose)
-                  for (var n = 0; n < s.combinationChoose.length; n++) {
-                    var i = s.combinationChoose[n];
-                    (e.push(i.id + "-" + i.value), (t[i.id] = !0));
-                  }
-                if (s && s.split)
-                  for (var o = 0; o < s.split.length; o++) t[(i = s.split[o]).id] || e.push(i.id + "-" + i.value);
-                return e.join("|");
-              })()) && (t += "&cc=" + n),
-              (n = (function () {
-                var e = {},
-                  t = [];
-                if (w.VWO && Array.isArray(w.VWO))
-                  for (var n = 0; n < w.VWO.length; n++) {
-                    var i = w.VWO[n];
-                    if (Array.isArray(i) && "setVariation" === i[0] && i[1] && Array.isArray(i[1]))
-                      for (var o = 0; o < i[1].length; o++) {
-                        var r,
-                          a = i[1][o];
-                        a && "object" == typeof a && ((r = a.e), (a = a.v), r && a && (e[r] = a));
-                      }
-                  }
-                for (r in e) t.push(r + "-" + e[r]);
-                return t.join("|");
-              })()) && (t += "&sv=" + n)),
-              s && s.optOut && (t += "&o=" + s.optOut));
-            var n = (function () {
-              var e = [],
-                t = {};
-              if (s && s.exclude)
-                for (var n = 0; n < s.exclude.length; n++) {
-                  var i = s.exclude[n];
-                  t[i.id] || (e.push(i.id), (t[i.id] = !0));
+            },
+            en: {
+                nav: { home: 'Home', services: 'Services', projects: 'Projects', reviews: 'Reviews', about: 'About', contact: 'Contact' },
+                hero: { title: 'BK HausConcept', subtitle: 'Premium Construction and Renovation Company in NRW', cta: 'Free Consultation' },
+                services: {
+                    title: 'Our Services',
+                    subtitle: 'Professional construction services with the highest quality standards',
+                    list: [
+                        { title: 'Renovation', desc: 'Complete apartment renovation from A to Z. We handle all trades – from floor plan to final design. Modernization of your spaces with high-quality materials and precise craftsmanship.' },
+                        { title: 'Core Renovation', desc: 'Comprehensive renovation projects for old buildings and existing properties. Structural renewal of walls, floors, ceilings, and complete electrical and plumbing installations. Energy optimization included.' },
+                        { title: 'Drywall', desc: 'Modern drywall solutions for flexible space design. Walls, ceilings, facing shells, and acoustic ceilings. Fast, clean installation with perfect surface quality for subsequent painting work.' },
+                        { title: 'Tiling', desc: 'Professional tile installation in bathrooms, kitchens, and living areas. Precise work with all materials – ceramic, natural stone, large format. Perfect grouting and waterproof sealing guaranteed.' },
+                        { title: 'Flooring', desc: 'Installation of all floor coverings: parquet, laminate, vinyl, tiles. Professional subfloor preparation, precise cutting, and seamless installation. Long-lasting durability through expert execution.' },
+                        { title: 'Painting', desc: 'High-quality painting work for interior spaces. Filling, priming, and painting with first-class paints. Creative wall design, texture techniques, and individual color concepts according to your wishes.' },
+                        { title: 'Bathroom', desc: 'Complete bathroom renovation from concept to completion. Modern plumbing technology, elegant tiles, barrier-free solutions. We create your dream bathroom – functional, stylish, and durable.' },
+                        { title: 'Interior Design', desc: 'Custom interior design. Built-in wardrobes, shelving systems, room dividers, and tailored solutions. Perfect integration into your living spaces with the highest processing quality.' }
+                    ]
+                },
+                projects: { title: 'Our Projects', subtitle: 'Insights into our completed work' },
+                reviews: {
+                    title: 'Customer Reviews',
+                    subtitle: 'What our customers say about us',
+                    list: [
+                        { text: 'Excellent work! BK HausConcept completely renovated our apartment. Everything was done on schedule and cleanly. The team was always friendly and professional. Highly recommended!', author: 'Michael S., Essen' },
+                        { text: 'We are thrilled with our new bathroom! The consultation was excellent and the implementation perfect. Quality and value for money are 100% right. Many thanks to the entire team!', author: 'Müller Family, Dortmund' },
+                        { text: 'Professional, reliable, and punctual. The core renovation of our old building was carried out exactly according to plan. The cleanliness at the construction site was particularly impressive. Gladly again!', author: 'Anna K., Düsseldorf' },
+                        { text: 'Top craftsmen! Everything ran smoothly from the first inspection to the handover. Fair prices, transparent communication, and first-class quality. We can unreservedly recommend BK HausConcept.', author: 'Thomas B., Bochum' }
+                    ]
+                },
+                about: { 
+                    title: 'About BK HausConcept', 
+                    text: 'BK HausConcept – your reliable construction company in NRW. We specialize in high-quality apartment, house, and bathroom renovations. With years of experience, precise craftsmanship, and an eye for detail, we transform your spaces into modern, functional, and aesthetic living environments. Clean work, reliable service, and full-cycle project management – from planning to key handover.' 
+                },
+                contact: {
+                    title: 'Contact',
+                    subtitle: 'Get in touch with us',
+                    form: { name: 'Name', email: 'Email', phone: 'Phone', message: 'Message', submit: 'Send Message' },
+                    email: { title: 'Email' },
+                    whatsapp: { title: 'WhatsApp', text: 'Write message' },
+                    success: 'Thank you! Your message has been sent successfully. We will contact you soon.'
                 }
-              return e.join("|");
-            })();
-            return (
-              n && (t += "&e=" + n),
-              s && s.uuid && (t += "&id=" + s.uuid),
-              s && s.consent && (t += "&consent=" + s.consent),
-              w.name && -1 < w.name.indexOf("_vis_preview") && (t += "&pM=true"),
-              w.VWO && w.VWO.ed && (t += "&ed=" + w.VWO.ed),
-              t
-            );
-          }
-          code = {
-            nonce: v && v.nonce,
-            library_tolerance: function () {
-              return "undefined" != typeof library_tolerance ? library_tolerance : void 0;
             },
-            settings_tolerance: function () {
-              return cc.sT || settings_tolerance;
+            ru: {
+                nav: { home: 'Главная', services: 'Услуги', projects: 'Проекты', reviews: 'Отзывы', about: 'О нас', contact: 'Контакт' },
+                hero: { title: 'BK HausConcept', subtitle: 'Премиум строительная и ремонтная компания в NRW', cta: 'Бесплатная консультация' },
+                services: {
+                    title: 'Наши услуги',
+                    subtitle: 'Профессиональные строительные услуги высочайшего качества',
+                    list: [
+                        { title: 'Ремонт', desc: 'Полный ремонт квартиры от А до Я. Все виды работ – от планировки до финальной отделки. Модернизация помещений с использованием качественных материалов и точной работы.' },
+                        { title: 'Капитальный ремонт', desc: 'Комплексные проекты для старых зданий. Структурное обновление стен, полов, потолков, полная замена электрики и сантехники. Энергетическая оптимизация включена.' },
+                        { title: 'Гипсокартон', desc: 'Современные решения из гипсокартона для гибкого дизайна. Стены, потолки, акустические покрытия. Быстрая установка с идеальным качеством поверхности.' },
+                        { title: 'Плитка', desc: 'Профессиональная укладка плитки в ванной, кухне и жилых помещениях. Точная работа со всеми материалами. Идеальные швы и водонепроницаемая герметизация гарантированы.' },
+                        { title: 'Полы', desc: 'Укладка всех напольных покрытий: паркет, ламинат, винил, плитка. Профессиональная подготовка основания, точная резка и бесшовная укладка.' },
+                        { title: 'Малярные работы', desc: 'Высококачественные малярные работы для интерьеров. Шпаклевка, грунтовка и покраска первоклассными красками. Креативный дизайн стен и индивидуальные цветовые решения.' },
+                        { title: 'Ванная комната', desc: 'Полная реконструкция ванной от концепции до завершения. Современная сантехника, элегантная плитка, безбарьерные решения. Ванная вашей мечты – функциональная и стильная.' },
+                        { title: 'Внутренняя отделка', desc: 'Индивидуальный дизайн интерьера. Встроенные шкафы, стеллажи, перегородки и решения на заказ. Идеальная интеграция с высочайшим качеством исполнения.' }
+                    ]
+                },
+                projects: { title: 'Наши проекты', subtitle: 'Примеры наших завершенных работ' },
+                reviews: {
+                    title: 'Отзывы клиентов',
+                    subtitle: 'Что говорят о нас наши клиенты',
+                    list: [
+                        { text: 'Отличная работа! BK HausConcept полностью отремонтировали нашу квартиру. Все было сделано вовремя и чисто. Команда всегда была дружелюбной и профессиональной. Однозначно рекомендуем!', author: 'Михаэль С., Эссен' },
+                        { text: 'Мы в восторге от нашей новой ванной! Консультация была отличной, а реализация идеальной. Качество и соотношение цена-качество на 100%. Огромное спасибо всей команде!', author: 'Семья Мюллер, Дортмунд' },
+                        { text: 'Профессионально, надежно и пунктуально. Капитальный ремонт нашего старого здания был выполнен точно по плану. Особенно впечатлила чистота на стройплощадке. С удовольствием обратимся снова!', author: 'Анна К., Дюссельдорф' },
+                        { text: 'Лучшие мастера! От первого осмотра до сдачи объекта все прошло гладко. Честные цены, прозрачное общение и первоклассное качество. Мы без оговорок рекомендуем BK HausConcept.', author: 'Томас Б., Бохум' }
+                    ]
+                },
+                about: { 
+                    title: 'О BK HausConcept', 
+                    text: 'BK HausConcept – ваша надежная строительная компания в NRW. Мы специализируемся на качественном ремонте квартир, домов и ванных комнат. С многолетним опытом, точной работой и вниманием к деталям мы превращаем ваши помещения в современные, функциональные и эстетичные пространства. Чистая работа, надежный сервис и управление проектом полного цикла – от планирования до сдачи ключей.' 
+                },
+                contact: {
+                    title: 'Контакт',
+                    subtitle: 'Свяжитесь с нами',
+                    form: { name: 'Имя', email: 'Email', phone: 'Телефон', message: 'Сообщение', submit: 'Отправить сообщение' },
+                    email: { title: 'Email' },
+                    whatsapp: { title: 'WhatsApp', text: 'Написать сообщение' },
+                    success: 'Спасибо! Ваше сообщение успешно отправлено. Мы свяжемся с вами в ближайшее время.'
+                }
             },
-            hide_element_style: function () {
-              return "{" + (cc.hES || hide_element_style) + "}";
-            },
-            hide_element: function () {
-              return performance.getEntriesByName("first-contentful-paint")[0]
-                ? ""
-                : "string" == typeof cc.hE
-                  ? cc.hE
-                  : hide_element;
-            },
-            getVersion: function () {
-              return version;
-            },
-            finish: function (e) {
-              var t;
-              f ||
-                ((f = !0),
-                (t = d.getElementById("_vis_opt_path_hides")) && t.parentNode.removeChild(t),
-                e && (new Image().src = "https://dev.visualwebsiteoptimizer.com/ee.gif?a=" + account_id + e));
-            },
-            finished: function () {
-              return f;
-            },
-            addScript: function (e) {
-              var t = d.createElement("script");
-              ((t.type = "text/javascript"),
-                e.src ? (t.src = e.src) : (t.text = e.text),
-                v && t.setAttribute("nonce", v.nonce),
-                d.getElementsByTagName("head")[0].appendChild(t));
-            },
-            load: function (e, t) {
-              t = t || {};
-              var n = new XMLHttpRequest();
-              (n.open("GET", e, !0),
-                (n.withCredentials = !t.dSC),
-                (n.responseType = t.responseType || "text"),
-                (n.onload = function () {
-                  if (t.onloadCb) return t.onloadCb(n, e);
-                  200 === n.status
-                    ? _vwo_code.addScript({ text: n.responseText })
-                    : _vwo_code.finish("&e=loading_failure:" + e);
-                }),
-                (n.onerror = function () {
-                  if (t.onerrorCb) return t.onerrorCb(e);
-                  _vwo_code.finish("&e=loading_failure:" + e);
-                }),
-                n.send());
-            },
-            init: function () {
-              var e,
-                t = this.settings_tolerance();
-              ((w._vwo_settings_timer = setTimeout(function () {
-                _vwo_code.finish();
-              }, t)),
-                "body" !== this.hide_element()
-                  ? ((n = d.createElement("style")),
-                    (e = (t = this.hide_element()) ? t + this.hide_element_style() : ""),
-                    (t = d.getElementsByTagName("head")[0]),
-                    n.setAttribute("id", "_vis_opt_path_hides"),
-                    v && n.setAttribute("nonce", v.nonce),
-                    n.setAttribute("type", "text/css"),
-                    n.styleSheet ? (n.styleSheet.cssText = e) : n.appendChild(d.createTextNode(e)),
-                    t.appendChild(n))
-                  : ((n = d.getElementsByTagName("head")[0]),
-                    ((e = d.createElement("div")).style.cssText =
-                      "z-index: 2147483647 !important;position: fixed !important;left: 0 !important;top: 0 !important;width: 100% !important;height: 100% !important;background: white !important;"),
-                    e.setAttribute("id", "_vis_opt_path_hides"),
-                    e.classList.add("_vis_hide_layer"),
-                    n.parentNode.insertBefore(e, n.nextSibling)));
-              var n = "https://dev.visualwebsiteoptimizer.com/j.php?" + i();
-              -1 !== w.location.search.indexOf("_vwo_xhr")
-                ? this.addScript({ src: n })
-                : this.load(n + "&x=true", { l: 1 });
-            },
-          };
-          w._vwo_code = code;
-          code.init();
-        })();
-    </script>
-    <!-- End VWO Async SmartCode -->
-    <!-- Add Google Identity Services script -->
-    <script src="https://accounts.google.com/gsi/client" async></script>
-    <!-- Paddle.js for checkout overlay (initialized in paddleService.ts with env token) -->
-    <script src="https://cdn.paddle.com/paddle/v2/paddle.js" defer></script>
-    <!-- Meta Pixel Code — gated via window.__emergentTrackingAllowed (see allowlist at top of <head>) -->
-    <script>
-      (function () {
-        if (!window.__emergentTrackingAllowed) return;
+            ua: {
+                nav: { home: 'Головна', services: 'Послуги', projects: 'Проєкти', reviews: 'Відгуки', about: 'Про нас', contact: 'Контакт' },
+                hero: { title: 'BK HausConcept', subtitle: 'Преміум будівельна та ремонтна компанія в NRW', cta: 'Безкоштовна консультація' },
+                services: {
+                    title: 'Наші послуги',
+                    subtitle: 'Професійні будівельні послуги найвищої якості',
+                    list: [
+                        { title: 'Ремонт', desc: 'Повний ремонт квартири від А до Я. Всі види робіт – від планування до фінального оздоблення. Модернізація приміщень з використанням якісних матеріалів та точної роботи.' },
+                        { title: 'Капітальний ремонт', desc: 'Комплексні проекти для старих будівель. Структурне оновлення стін, підлог, стель, повна заміна електрики та сантехніки. Енергетична оптимізація включена.' },
+                        { title: 'Гіпсокартон', desc: 'Сучасні рішення з гіпсокартону для гнучкого дизайну. Стіни, стелі, акустичні покриття. Швидка установка з ідеальною якістю поверхні.' },
+                        { title: 'Плитка', desc: 'Професійна укладка плитки у ванній, кухні та житлових приміщеннях. Точна робота з усіма матеріалами. Ідеальні шви та водонепроникна герметизація гарантовані.' },
+                        { title: 'Підлога', desc: 'Укладка всіх підлогових покриттів: паркет, ламінат, вініл, плитка. Професійна підготовка основи, точне різання та безшовна укладка.' },
+                        { title: 'Малярні роботи', desc: 'Високоякісні малярні роботи для інтер'єрів. Шпаклювання, грунтування та фарбування першокласними фарбами. Креативний дизайн стін та індивідуальні кольорові рішення.' },
+                        { title: 'Ванна кімната', desc: 'Повна реконструкція ванної від концепції до завершення. Сучасна сантехніка, елегантна плитка, безбар'єрні рішення. Ванна вашої мрії – функціональна та стильна.' },
+                        { title: 'Внутрішнє оздоблення', desc: 'Індивідуальний дизайн інтер'єру. Вбудовані шафи, стелажі, перегородки та рішення на замовлення. Ідеальна інтеграція з найвищою якістю виконання.' }
+                    ]
+                },
+                projects: { title: 'Наші проєкти', subtitle: 'Приклади наших завершених робіт' },
+                reviews: {
+                    title: 'Відгуки клієнтів',
+                    subtitle: 'Що говорять про нас наші клієнти',
+                    list: [
+                        { text: 'Відмінна робота! BK HausConcept повністю відремонтували нашу квартиру. Все було зроблено вчасно та чисто. Команда завжди була доброзичливою та професійною. Однозначно рекомендуємо!', author: 'Міхаель С., Ессен' },
+                        { text: 'Ми в захваті від нашої нової ванної! Консультація була чудовою, а реалізація ідеальною. Якість та співвідношення ціна-якість на 100%. Величезна подяка всій команді!', author: 'Сім'я Мюллер, Дортмунд' },
+                        { text: 'Професійно, надійно та пунктуально. Капітальний ремонт нашої старої будівлі був виконаний точно за планом. Особливо вразила чистота на будмайданчику. З задоволенням звернемося знову!', author: 'Анна К., Дюссельдорф' },
+                        { text: 'Найкращі майстри! Від першого огляду до здачі об'єкта все пройшло гладко. Чесні ціни, прозоре спілкування та першокласна якість. Ми без застережень рекомендуємо BK HausConcept.', author: 'Томас Б., Бохум' }
+                    ]
+                },
+                about: { 
+                    title: 'Про BK HausConcept', 
+                    text: 'BK HausConcept – ваша надійна будівельна компанія в NRW. Ми спеціалізуємося на якісному ремонті квартир, будинків та ванних кімнат. З багаторічним досвідом, точною роботою та увагою до деталей ми перетворюємо ваші приміщення на сучасні, функціональні та естетичні простори. Чиста робота, надійний сервіс та управління проектом повного циклу – від планування до здачі ключів.' 
+                },
+                contact: {
+                    title: 'Контакт',
+                    subtitle: 'Зв'яжіться з нами',
+                    form: { name: 'Ім'я', email: 'Email', phone: 'Телефон', message: 'Повідомлення', submit: 'Відправити повідомлення' },
+                    email: { title: 'Email' },
+                    whatsapp: { title: 'WhatsApp', text: 'Написати повідомлення' },
+                    success: 'Дякуємо! Ваше повідомлення успішно відправлено. Ми зв'яжемося з вами найближчим часом.'
+                }
+            }
+        };
 
-        !(function (f, b, e, v, n, t, s) {
-          if (f.fbq) return;
-          n = f.fbq = function () {
-            n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-          };
-          if (!f._fbq) f._fbq = n;
-          n.push = n;
-          n.loaded = !0;
-          n.version = "2.0";
-          n.queue = [];
-          t = b.createElement(e);
-          t.async = !0;
-          t.src = v;
-          s = b.getElementsByTagName(e)[0];
-          s.parentNode.insertBefore(t, s);
-        })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
-        fbq("init", "1326372205570201");
-        fbq("track", "PageView");
-      })();
-    </script>
-    <!-- End Meta Pixel Code -->
-    <!-- Conditionally load PartnerStack for partner users only -->
-    <script>
-      (function () {
-        if (!window.__emergentTrackingAllowed) return;
-        // Helper to get cookie by name (reuse pattern from Rewardful)
-        function getCookieValue(name) {
-          var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-          return match ? match[2] : null;
+        let currentLang = 'de';
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('active');
         }
 
-        // Check if user is from partner link
-        function isPartnerUser() {
-          var urlParams = new URLSearchParams(window.location.search);
-
-          if (urlParams.get("ps_partner_key")) {
-            return true;
-          }
-          // Check if ps_partner_key cookie exists (returning partner user)
-          if (getCookieValue("ps_partner_key")) {
-            return true;
-          }
-          return false;
+        function initServices() {
+            const servicesGrid = document.getElementById('services-grid');
+            translations[currentLang].services.list.forEach((service, index) => {
+                const card = document.createElement('div');
+                card.className = 'service-card';
+                card.innerHTML = `
+                    <h3 data-service-title=\"${index}\">${service.title}</h3>
+                    <p data-service-desc=\"${index}\">${service.desc}</p>
+                `;
+                servicesGrid.appendChild(card);
+            });
         }
 
-        // Only load PartnerStack for partner users
-        if (isPartnerUser()) {
-          var gs = document.createElement("script");
-          gs.src = "https://js.partnerstack.com/v1/";
-          gs.type = "text/javascript";
-          gs.async = true;
-          gs.onload = gs.onreadystatechange = function () {
-            var rs = this.readyState;
-            if (rs && rs != "complete" && rs != "loaded") return;
-            try {
-              growsumo._initialize("pk_X807fuc0nfNQX8tFKDm3PatW0ZZNyDUd", [
-                "emergentlabsinc.partnerlinks.io",
-                "get.emergent.sh",
-                "trialcoig7l2s8gsenk14emergent.partnerlinks.io",
-              ]);
-              if (typeof growsumoInit === "function") {
-                growsumoInit();
-              }
-            } catch (e) {}
-          };
-          var s = document.getElementsByTagName("script")[0];
-          s.parentNode.insertBefore(gs, s);
+        function initProjects() {
+            const projectsGrid = document.getElementById('projects-grid');
+            projectImages.forEach((img, index) => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.onclick = () => openModal(img);
+                card.innerHTML = `
+                    <img src=\"${img}\" alt=\"BK HausConcept Projekt ${index + 1}\" loading=\"lazy\">
+                    <div class=\"project-overlay\"></div>
+                `;
+                projectsGrid.appendChild(card);
+            });
         }
-      })();
+
+        function initReviews() {
+            const reviewsGrid = document.getElementById('reviews-grid');
+            translations[currentLang].reviews.list.forEach((review, index) => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML = `
+                    <div class=\"review-rating\" data-review-rating=\"${index}\">★★★★★</div>
+                    <p class=\"review-text\" data-review-text=\"${index}\">${review.text}</p>
+                    <p class=\"review-author\" data-review-author=\"${index}\">– ${review.author}</p>
+                `;
+                reviewsGrid.appendChild(card);
+            });
+        }
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.dataset.translate;
+                const value = key.split('.').reduce((obj, k) => obj?.[k], t);
+                if (value) el.textContent = value;
+            });
+
+            document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+                const key = el.dataset.translatePlaceholder;
+                const value = key.split('.').reduce((obj, k) => obj?.[k], t);
+                if (value) el.placeholder = value;
+            });
+
+            // Update services
+            t.services.list.forEach((service, index) => {
+                const titleEl = document.querySelector(`[data-service-title=\"${index}\"]`);
+                const descEl = document.querySelector(`[data-service-desc=\"${index}\"]`);
+                if (titleEl) titleEl.textContent = service.title;
+                if (descEl) descEl.textContent = service.desc;
+            });
+
+            // Update reviews
+            document.getElementById('reviews-grid').innerHTML = '';
+            initReviews();
+        }
+
+        function openModal(imgSrc) {
+            document.getElementById('modal-img').src = imgSrc;
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initServices();
+            initProjects();
+            initReviews();
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    updateLanguage(this.dataset.lang);
+                });
+            });
+
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showToast(translations[currentLang].contact.success);
+                this.reset();
+            });
+
+            // Smooth scroll
+            document.querySelectorAll('a[href^=\"#\"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
     </script>
-    <!-- End PartnerStack -->
-    <script type="module" crossorigin src="/main-BavSVQib.js"></script>
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-D4YuWzPp.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-BCEIx-vT.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-ITt1Cbc2.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-DtnTuNqk.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-9lEPVTaW.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-Be_i8Iyn.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-CLSwlXUx.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-ZPaHnTlR.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-DTvIgUOG.js">
-    <link rel="modulepreload" crossorigin href="/chunks/chunk-B03v0n1R.js">
-    <link rel="stylesheet" crossorigin href="/assets/monaco-editor-BetWCQm5.css">
-    <link rel="stylesheet" crossorigin href="/assets/main-CqjRkQUG.css">
-  </head>
-  <body>
-    <!-- Meta Pixel Code (noscript) -->
-    <noscript
-      ><img
-        height="1"
-        width="1"
-        style="display: none"
-        src="https://www.facebook.com/tr?id=1326372205570201&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code (noscript) -->
-    <div id="root"></div>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-NCCB99P9"
-        height="0"
-        width="0"
-        style="display: none; visibility: hidden"
-      ></iframe
-    ></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-  </body>
-</html>
+</body>
+</html>"
